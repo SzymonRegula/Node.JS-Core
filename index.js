@@ -1,1 +1,3 @@
-export default getRandomNumber = () => Math.floor(Math.random() * 1000) + 1;
+const getRandomNumber = () => Math.floor(Math.random() * 1000) + 1;
+
+export default getRandomNumber;
