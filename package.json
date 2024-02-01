@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "task1": "nodemon eventEmitter.js"
+    "task1": "nodemon eventEmitter.js",
+    "task2": "nodemon withTime.js"
   },
   "keywords": [],
   "author": "",
