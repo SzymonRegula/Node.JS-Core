@@ -6,14 +6,18 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "task1": "nodemon eventEmitter.js",
-    "task2": "nodemon withTime.js"
+    "start": "nodemon task1/index.js",
+    "task1": "nodemon task3/eventEmitter.js",
+    "task2": "nodemon task3/withTime.js",
+    "task3": "nodemon task3/csvToTxt.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.0.3"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10"
   }
 }
