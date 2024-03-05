@@ -3,7 +3,7 @@ import {
   getListOfPublicHolidays,
   checkIfTodayIsPublicHoliday,
   getNextPublicHolidays,
-} from "./public-holidays.service";
+} from "../services/public-holidays.service";
 import { PublicHoliday, PublicHolidayShort } from "../types";
 import { PUBLIC_HOLIDAYS_API_URL, SUPPORTED_COUNTRIES } from "../config";
 
