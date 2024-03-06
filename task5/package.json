@@ -1,0 +1,16 @@
+{
+  "name": "task5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start index.js --name ngmp-network-app",
+    "stop": "pm2 stop ngmp-network-app"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "pm2": "^5.3.1"
+  }
+}
