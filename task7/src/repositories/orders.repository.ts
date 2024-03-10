@@ -1,9 +1,12 @@
-import { OrderEntity } from "../entities/order.entity";
+import { OrderEntity, OrderModel } from "../entities/order.entity";
 
-const orders: OrderEntity[] = [];
-
-const createOrder = (order: OrderEntity) => {
-  orders.push(order);
+const createOrder = async (order: OrderEntity) => {
+  try {
+    await OrderModel.create(order);
+  } catch (error) {
+    console.log(`Error creating order: ${(error as Error).message}`);
+    throw error;
+  }
   return order;
 };
 

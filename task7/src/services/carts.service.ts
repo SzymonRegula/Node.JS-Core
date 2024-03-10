@@ -8,18 +8,22 @@ import { v4 as uuidv4 } from "uuid";
 import * as cartsRespository from "../repositories/carts.repository";
 import * as ordersRepository from "../repositories/orders.repository";
 
-const getCartByUserId = (id: string) => {
-  const cart = cartsRespository.getCartByUserId(id);
+const getCartByUserId = async (id: string) => {
+  const cart = await cartsRespository.getCartByUserId(id);
   return getCartResponse(cart);
 };
 
-const deleteCartByUserId = (id: string) => {
-  const newCart = cartsRespository.deleteCartByUserId(id);
+const deleteCartByUserId = async (id: string) => {
+  const newCart = await cartsRespository.deleteCartByUserId(id);
   return getCartResponse(newCart);
 };
 
-const updateCartItems = (userId: string, productId: string, count: number) => {
-  const cart = cartsRespository.updateCartItems(userId, productId, count);
+const updateCartItems = async (
+  userId: string,
+  productId: string,
+  count: number
+) => {
+  const cart = await cartsRespository.updateCartItems(userId, productId, count);
   return getCartResponse(cart);
 };
 
@@ -38,13 +42,13 @@ const getCartResponse = (cart: CartEntity) => {
   return cartResponse;
 };
 
-const createOrder = (
+const createOrder = async (
   userId: string,
   payment: PaymentEntity,
   delivery: DeliveryEntity,
   comments: string
 ) => {
-  const cart = cartsRespository.getCartByUserId(userId);
+  const cart = await cartsRespository.getCartByUserId(userId);
   if (cart.items.length === 0) {
     throw new Error("Cart is empty");
   }
@@ -62,7 +66,7 @@ const createOrder = (
       0
     ),
   };
-  ordersRepository.createOrder(order);
+  await ordersRepository.createOrder(order);
 
   return { order };
 };

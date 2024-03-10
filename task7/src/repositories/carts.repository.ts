@@ -1,68 +1,92 @@
-import { CartEntity, CartItemEntity } from "../entities/cart.entity";
+import { CartEntity, CartItemEntity, CartModel } from "../entities/cart.entity";
 import { v4 as uuidv4 } from "uuid";
 import { getProductById } from "./products.repository";
 
-const carts: CartEntity[] = [
-  {
-    id: "1434fec6-cd85-420d-95c0-eee2301a971d",
-    userId: "0fe36d16-49bc-4aab-a227-f84df899a6cb",
-    isDeleted: false,
-    items: [
-      {
-        product: {
-          id: "5c293ad0-19d0-41ee-baa3-4c648f9f7697",
-          title: "Book",
-          description: "Interesting book",
-          price: 200,
-        },
-        count: 2,
-      },
-    ],
-  },
-];
-
-const createNewCart = (userId: string) => {
+const createNewCart = async (userId: string) => {
   const newCart: CartEntity = {
     id: uuidv4(),
     userId,
     isDeleted: false,
     items: [],
   };
-  carts.push(newCart);
+  try {
+    await CartModel.create(newCart);
+  } catch (error) {
+    console.log(`Error creating new cart: ${(error as Error).message}`);
+    throw error;
+  }
   return newCart;
 };
 
-const findCart = (userId: string) => {
-  return carts.find((cart) => cart.userId === userId && !cart.isDeleted);
+const findCart = async (userId: string) => {
+  try {
+    const mongoCart = await CartModel.findOne(
+      { userId, isDeleted: false },
+      { _id: 0, __v: 0 },
+      { lean: true }
+    );
+    return mongoCart;
+  } catch (error) {
+    console.log(`Error getting cart by user id: ${(error as Error).message}`);
+    throw error;
+  }
 };
 
-const getCartByUserId = (userId: string) => {
-  const cart = findCart(userId);
-  if (cart) {
+const deleteMongoIds = (cart: any) => {
+  const itemsWithoutIds = cart.items.map((item: any) => {
+    delete item._id;
+    delete item.product._id;
+
+    return item;
+  });
+  const cartWithoutMongoIds = { ...cart, items: itemsWithoutIds };
+  return cartWithoutMongoIds as CartEntity;
+};
+
+const getCartByUserId = async (userId: string) => {
+  const mongoCart = await findCart(userId);
+  if (mongoCart) {
+    const cart = deleteMongoIds(mongoCart);
     return cart;
   }
   return createNewCart(userId);
 };
 
-const deleteCartByUserId = (userId: string) => {
-  const cart = findCart(userId);
+const deleteCartByUserId = async (userId: string) => {
+  const cart = await findCart(userId);
   if (cart) {
     cart.isDeleted = true;
+    try {
+      await CartModel.updateOne({ userId }, cart);
+    } catch (error) {
+      console.log(
+        `Error deleting cart by user id: ${(error as Error).message}`
+      );
+      throw error;
+    }
   }
   return createNewCart(userId);
 };
 
-const updateCartItems = (userId: string, productId: string, count: number) => {
-  const cart = findCart(userId);
-  if (!cart) {
+const updateCartItems = async (
+  userId: string,
+  productId: string,
+  count: number
+) => {
+  const mongoCart = await findCart(userId);
+
+  if (!mongoCart) {
     throw new Error("Cart was not found");
   }
+
+  const cart = deleteMongoIds(mongoCart);
+
   const itemIndex = cart.items.findIndex(
     (item) => item.product.id === productId
   );
 
   if (itemIndex === -1 && count > 0) {
-    const product = getProductById(productId);
+    const product = await getProductById(productId);
     if (!product) {
       throw new Error("Products are not valid");
     }
@@ -75,6 +99,12 @@ const updateCartItems = (userId: string, productId: string, count: number) => {
     cart.items.splice(itemIndex, 1);
   } else {
     cart.items[itemIndex].count = count;
+  }
+  try {
+    await CartModel.updateOne({ userId }, cart);
+  } catch (error) {
+    console.log(`Error updating cart items: ${(error as Error).message}`);
+    throw error;
   }
   return cart;
 };

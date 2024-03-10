@@ -1,13 +1,13 @@
-import { UserEntity } from "../entities/user.entity";
+import { UserModel } from "../entities/user.entity";
 
-const users: UserEntity[] = [
-  {
-    id: "0fe36d16-49bc-4aab-a227-f84df899a6cb",
-  },
-];
-
-const getUserById = (id: string) => {
-  return users.find((user) => user.id === id);
+const getUserById = async (id: string) => {
+  try {
+    const user = await UserModel.findOne({ id: id }, { _id: 0 });
+    return user;
+  } catch (error) {
+    console.log(`Error getting user by id: ${(error as Error).message}`);
+    throw error;
+  }
 };
 
 export { getUserById };

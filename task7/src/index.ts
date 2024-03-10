@@ -3,9 +3,12 @@ import cartRouter from "./routers/cart.router";
 import productRouter from "./routers/products.router";
 import checkAuthentication from "./middlewares/authentication";
 import errorHandler from "./middlewares/errorHandler";
+import connectToDB from "./dbConnection";
 
 const app = express();
 const port = 8000;
+
+connectToDB();
 
 app.use(express.json());
 

@@ -3,26 +3,26 @@ import * as cartsService from "../services/carts.service";
 import { genereateResponse } from "../utils/response";
 import { DeliveryEntity, PaymentEntity } from "../entities/order.entity";
 
-const getCartByUserId = (req: Request, res: Response) => {
+const getCartByUserId = async (req: Request, res: Response) => {
   const userId = req.headers["x-user-id"] as string;
-  const cart = cartsService.getCartByUserId(userId);
+  const cart = await cartsService.getCartByUserId(userId);
 
   res.send(genereateResponse(cart));
 };
 
-const deleteCartByUserId = (req: Request, res: Response) => {
+const deleteCartByUserId = async (req: Request, res: Response) => {
   const userId = req.headers["x-user-id"] as string;
-  cartsService.deleteCartByUserId(userId);
+  await cartsService.deleteCartByUserId(userId);
 
   res.send(genereateResponse({ success: true }));
 };
 
-const updateCartItems = (req: Request, res: Response) => {
+const updateCartItems = async (req: Request, res: Response) => {
   const userId = req.headers["x-user-id"] as string;
   const { productId, count } = req.body;
 
   try {
-    const cart = cartsService.updateCartItems(userId, productId, count);
+    const cart = await cartsService.updateCartItems(userId, productId, count);
     res.send(genereateResponse(cart));
   } catch (error) {
     const err = error as Error;
@@ -36,7 +36,7 @@ const updateCartItems = (req: Request, res: Response) => {
   }
 };
 
-const createOrder = (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response) => {
   const userId = req.headers["x-user-id"] as string;
 
   const payment: PaymentEntity = {
@@ -51,8 +51,13 @@ const createOrder = (req: Request, res: Response) => {
   const comments = "some comments";
 
   try {
-    const order = cartsService.createOrder(userId, payment, delivery, comments);
-    cartsService.deleteCartByUserId(userId);
+    const order = await cartsService.createOrder(
+      userId,
+      payment,
+      delivery,
+      comments
+    );
+    await cartsService.deleteCartByUserId(userId);
     res.send(genereateResponse(order));
   } catch (error) {
     const err = error as Error;
