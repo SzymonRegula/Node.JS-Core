@@ -4,7 +4,6 @@ import { genereateResponse } from "../utils/response";
 
 const getAllProducts = async (req: Request, res: Response) => {
   const products = await productsService.getAllProducts();
-  console.log("productsController", products);
 
   res.send(genereateResponse(products));
 };

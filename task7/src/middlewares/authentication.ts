@@ -1,24 +1,40 @@
 import { NextFunction, Request, Response } from "express";
 import { getUserById } from "../services/users.service";
 import { genereateResponse } from "../utils/response";
-
+import * as jwt from "jsonwebtoken";
+import { Role } from "../entities/user.entity";
 const authentication = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const userId = req.headers["x-user-id"] as string;
+  const authHeader = req.headers.authorization;
 
-  if (!userId) {
-    res
-      .status(403)
-      .send(genereateResponse(null, "You must be authorized user"));
+  if (!authHeader) {
+    return res.status(401).send(genereateResponse(null, "No token provided"));
   }
 
-  const user = await getUserById(userId);
+  const [tokenType, token] = authHeader.split(" ");
 
-  if (!user) {
-    res.status(401).send(genereateResponse(null, "User is not authorized"));
+  if (tokenType !== "Bearer") {
+    return res.status(403).send(genereateResponse(null, "Invalid token type"));
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.TOKEN_KEY!) as {
+      id: string;
+      email: string;
+      role: Role;
+    };
+
+    const userFromDb = await getUserById(user.id);
+    if (!userFromDb) {
+      return res.status(403).send(genereateResponse(null, "Invalid Token"));
+    }
+    req.headers["x-user-id"] = user.id;
+    req.headers["x-user-role"] = user.role;
+  } catch (error) {
+    return res.status(403).send(genereateResponse(null, "Invalid Token"));
   }
 
   next();
