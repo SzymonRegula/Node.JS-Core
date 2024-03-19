@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 import { getUserByEmail } from "../services/users.service";
 
 const schema = Joi.object({

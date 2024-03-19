@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as usersService from "../services/users.service";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 import { UserRegistrationRequest } from "../entities/user.entity";
 
 const registerUser = async (req: Request, res: Response) => {

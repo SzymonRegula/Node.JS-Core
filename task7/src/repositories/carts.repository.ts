@@ -1,6 +1,7 @@
 import { CartEntity, CartItemEntity, CartModel } from "../entities/cart.entity";
 import { v4 as uuidv4 } from "uuid";
 import { getProductById } from "./products.repository";
+import { logger } from "../utils";
 
 const createNewCart = async (userId: string) => {
   const newCart: CartEntity = {
@@ -12,7 +13,7 @@ const createNewCart = async (userId: string) => {
   try {
     await CartModel.create(newCart);
   } catch (error) {
-    console.log(`Error creating new cart: ${(error as Error).message}`);
+    logger.error(`Error creating new cart: ${(error as Error).message}`);
     throw error;
   }
   return newCart;
@@ -27,7 +28,7 @@ const findCart = async (userId: string) => {
     );
     return mongoCart;
   } catch (error) {
-    console.log(`Error getting cart by user id: ${(error as Error).message}`);
+    logger.error(`Error getting cart by user id: ${(error as Error).message}`);
     throw error;
   }
 };
@@ -59,7 +60,7 @@ const deleteCartByUserId = async (userId: string) => {
     try {
       await CartModel.updateOne({ userId }, cart);
     } catch (error) {
-      console.log(
+      logger.error(
         `Error deleting cart by user id: ${(error as Error).message}`
       );
       throw error;
@@ -103,7 +104,7 @@ const updateCartItems = async (
   try {
     await CartModel.updateOne({ userId }, cart);
   } catch (error) {
-    console.log(`Error updating cart items: ${(error as Error).message}`);
+    logger.error(`Error updating cart items: ${(error as Error).message}`);
     throw error;
   }
   return cart;

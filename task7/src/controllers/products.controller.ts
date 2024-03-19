@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as productsService from "../services/products.service";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 
 const getAllProducts = async (req: Request, res: Response) => {
   const products = await productsService.getAllProducts();

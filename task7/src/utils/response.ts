@@ -1,4 +1,4 @@
-export const genereateResponse = (data: any, errorMessage?: string) => {
+const genereateResponse = (data: any, errorMessage?: string) => {
   if (errorMessage) {
     return {
       data: null,
@@ -12,3 +12,5 @@ export const genereateResponse = (data: any, errorMessage?: string) => {
     error: null,
   };
 };
+
+export default genereateResponse;

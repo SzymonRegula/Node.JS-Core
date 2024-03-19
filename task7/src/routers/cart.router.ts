@@ -5,8 +5,7 @@ import {
   updateCartItems,
   createOrder,
 } from "../controllers/carts.controller";
-import validateUpdateCart from "../middlewares/validateUpdateCart";
-import isAdmin from "../middlewares/isAdmin";
+import { isAdmin, validateUpdateCart } from "../middlewares";
 const router = Router();
 
 router.get("/", getCartByUserId);

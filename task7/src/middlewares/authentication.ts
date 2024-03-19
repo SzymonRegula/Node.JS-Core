@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { getUserById } from "../services/users.service";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 import * as jwt from "jsonwebtoken";
 import { Role } from "../entities/user.entity";
+
 const authentication = async (
   req: Request,
   res: Response,

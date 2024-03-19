@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 
 const schema = Joi.object({
   productId: Joi.string().guid({ version: "uuidv4" }).required(),

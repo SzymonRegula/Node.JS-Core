@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as cartsService from "../services/carts.service";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 import { DeliveryEntity, PaymentEntity } from "../entities/order.entity";
 
 const getCartByUserId = async (req: Request, res: Response) => {
