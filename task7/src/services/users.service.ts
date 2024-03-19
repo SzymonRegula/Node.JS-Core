@@ -1,7 +1,7 @@
 import { UserRegistrationRequest } from "../entities/user.entity";
 import * as usersRepository from "../repositories/users.repository";
 import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 
 const getUserById = (id: string) => {

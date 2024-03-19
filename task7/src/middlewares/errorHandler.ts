@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
+import { logger } from "../utils";
 
 const errorHandler = (
-  err: Error,
+  error: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  console.log(err);
+  logger.error(error);
   res.status(500).send(genereateResponse(null, "Internal server error"));
 };
 

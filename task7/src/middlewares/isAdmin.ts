@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Role } from "../entities/user.entity";
-import { genereateResponse } from "../utils/response";
+import { genereateResponse } from "../utils";
 
 const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   const role = req.headers["x-user-role"] as Role;
